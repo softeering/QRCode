@@ -1,15 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Net;
-using System.Runtime.InteropServices;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ZXing;
-using ZXing.QrCode;
-using ZXing.Rendering;
 
 var host = new HostBuilder()
 	.ConfigureFunctionsWorkerDefaults()
@@ -114,9 +109,4 @@ public record QRCodeWifiModel([Required] string SSID, [Required] string Password
 	: QRCodeBase(DisplayContent, Height, Width, Margin)
 {
 	public override string Content => $"WIFI:S:{this.SSID};T:{this.Security};P:{this.Password};H:{this.Hidden}";
-}
-
-public static class Extensions
-{
-	
 }
