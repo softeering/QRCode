@@ -40,18 +40,27 @@ public class QRCodeApi
 	}
 
 	// curl -d '{"url": "https://www.google.com"}' http://localhost:7071/qrcode/url
+	// curl -d '{"url": "https://www.google.com"}' https://softeering-tools.azurewebsites.net/qrcode/url
 	[Function("QRCodeUrl")]
 	public async Task<HttpResponseData> GenerateQRCodeUrl([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "url")] HttpRequestData req)
 	{
-		this._logger.LogInformation("C# HTTP trigger function processed a request.");
+		try
+		{
+			this._logger.LogInformation("C# HTTP trigger function processed a request.");
 
-		var model = (await req.ReadFromJsonAsync<QRCodeUrlModel>())!;
+			var model = (await req.ReadFromJsonAsync<QRCodeUrlModel>())!;
 
-		var response = req.CreateResponse(HttpStatusCode.OK);
-		response.Headers.Add("Content-Type", "image/png");
-		await response.Body.WriteAsync(model.ToQRCode());
+			var response = req.CreateResponse(HttpStatusCode.OK);
+			response.Headers.Add("Content-Type", "image/png");
+			await response.Body.WriteAsync(model.ToQRCode());
 
-		return response;
+			return response;
+		}
+		catch (Exception error)
+		{
+			this._logger.LogError(error, "error occured");
+			throw;
+		}
 	}
 
 	// curl -d '{"ssid": "dpbbpm", "password": ""}' http://localhost:7071/qrcode/wifi
